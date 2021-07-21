@@ -1,22 +1,45 @@
-function returnPromise() {
-  return new Promise<boolean>((resolve) => {
-    setTimeout(() => { resolve(true) }, 2000)
+function returnPromise(isRejected: boolean) {
+  return new Promise((resolve, reject) => {
+    isRejected ? reject("rejected") : resolve("resolved")
   })
 }
 
-function asyncProcess() {
-  returnPromise()
-    .then(res => {
-      console.log(`asyncProcess result #${res}`)
-    })
+export function asyncProcess() {
+  try {
+    returnPromise(false)
+      .then(res => {
+        console.log(`asyncProcess result #1 ${res}`)
+      })
+  } catch(err) {
+    console.error(err)
+  }
+
+  try {
+    returnPromise(true)
+      .then(res => {
+        console.log(`asyncProcess result #2 ${res}`)
+      })
+  } catch(err) {
+    console.error(err)
+  }
+
   console.log('asyncProcess done.')
 }
 
-async function syncProcess() {
-  const res = await returnPromise()
-  console.log(`syncProcess result #${res}`)
+export async function syncProcess() {
+  try {
+    const res = await returnPromise(false)
+    console.log(`syncProcess result #1 ${res}`)
+  } catch(err) {
+    console.error(err)
+  }
+
+  try {
+    const res = await returnPromise(true)
+    console.log(`syncProcess result #2 ${res}`)
+  } catch(err) {
+    console.error(err)
+  }
+
   console.log('syncProcess done.')
 }
-
-asyncProcess()
-syncProcess()
