@@ -1,5 +1,5 @@
 function returnPromise(isRejected: boolean) {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     isRejected ? reject(new Error("rejected")) : resolve("resolved")
   })
 }
@@ -19,11 +19,11 @@ export function asyncProcess() {
 }
 
 export async function syncProcess() {
-  const res1 = await returnPromise(false)
-  console.log(`syncProcess result #1 ${res1}`)
+  const res = await returnPromise(false)
+  console.log(`syncProcess result #1 ${res}`)
 
-  const res2 = await returnPromise(true).catch((err: Error) => err.message)
-  console.log(`syncProcess result #2 ${res2}`)
+  const err = await returnPromise(true).catch((err: Error) => err.message)
+  console.log(`syncProcess result #2 ${err}`)
 
   console.log('syncProcess done.')
 }
