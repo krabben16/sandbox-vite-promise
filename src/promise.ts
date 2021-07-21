@@ -1,45 +1,29 @@
 function returnPromise(isRejected: boolean) {
   return new Promise((resolve, reject) => {
-    isRejected ? reject("rejected") : resolve("resolved")
+    isRejected ? reject(new Error("rejected")) : resolve("resolved")
   })
 }
 
 export function asyncProcess() {
-  try {
-    returnPromise(false)
-      .then(res => {
-        console.log(`asyncProcess result #1 ${res}`)
-      })
-  } catch(err) {
-    console.error(err)
-  }
+  returnPromise(false)
+    .then(res => {
+      console.log(`asyncProcess result #1 ${res}`)
+    })
 
-  try {
-    returnPromise(true)
-      .then(res => {
-        console.log(`asyncProcess result #2 ${res}`)
-      })
-  } catch(err) {
-    console.error(err)
-  }
+  returnPromise(true)
+    .catch((err: Error) => {
+      console.log(`asyncProcess result #2 ${err.message}`)
+    })
 
   console.log('asyncProcess done.')
 }
 
 export async function syncProcess() {
-  try {
-    const res = await returnPromise(false)
-    console.log(`syncProcess result #1 ${res}`)
-  } catch(err) {
-    console.error(err)
-  }
+  const res1 = await returnPromise(false)
+  console.log(`syncProcess result #1 ${res1}`)
 
-  try {
-    const res = await returnPromise(true)
-    console.log(`syncProcess result #2 ${res}`)
-  } catch(err) {
-    console.error(err)
-  }
+  const res2 = await returnPromise(true).catch((err: Error) => err.message)
+  console.log(`syncProcess result #2 ${res2}`)
 
   console.log('syncProcess done.')
 }
